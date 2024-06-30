@@ -1,0 +1,27 @@
+.suggestion-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  max-height: 150px;
+  overflow-y: auto;
+  /* position: absolute; */
+  width: 100%;
+  z-index: 1000;
+  visibility: hidden; /* 默认情况下隐藏边框 */
+  bottom: 50px; /* 确保它在输入框上方 */
+}
+
+.suggestion-container.has-suggestions {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  visibility: visible; /* 当有建议时显示边框 */
+}
+
+.suggestion-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background-color: #f1f1f1;
+}
