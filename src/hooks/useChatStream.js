@@ -1,8 +1,9 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 
 const useChatStream = () => {
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
+    const accumulatedResponseRef = useRef('');
 
     const sendMessage = useCallback((text) => {
         setLoading(true);
@@ -32,7 +33,7 @@ const useChatStream = () => {
 
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
-                let accumulatedResponse = '';
+                accumulatedResponseRef.current = '';
 
                 let done = false;
                 let botMessageId = Date.now();
@@ -44,13 +45,13 @@ const useChatStream = () => {
                 while (!done) {
                     const { value, done: readerDone } = await reader.read();
                     done = readerDone;
-                    accumulatedResponse += decoder.decode(value, { stream: true });
+                    accumulatedResponseRef.current += decoder.decode(value, { stream: true });
 
                     // Update the bot response in the state gradually
-                    setMessages((prevMessages) => 
-                        prevMessages.map(msg => 
-                            msg.id === botMessageId 
-                            ? { ...msg, text: accumulatedResponse } 
+                    setMessages((prevMessages) =>
+                        prevMessages.map(msg =>
+                            msg.id === botMessageId
+                            ? { ...msg, text: accumulatedResponseRef.current  }
                             : msg
                         )
                     );
